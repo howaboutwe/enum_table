@@ -32,7 +32,7 @@ database directly. Another problem is the database cannot enforce any
 This plugin implements a different strategy which solves the above problems -
 each enum is defined by a table with `id` and `value` columns, which defines the
 values and the integers they map to. Altering the values can be done with simple
-DDL statements, which do not require rebuilding any tables.
+DML statements, which do not require rebuilding any tables.
 
 [enum_column3]: https://github.com/taktsoft/enum_column3
 [pt-osc]: http://www.percona.com/doc/percona-toolkit/2.1/pt-online-schema-change.html

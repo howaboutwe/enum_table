@@ -22,7 +22,6 @@ module EnumTable
       end.sort
     end
 
-    DEFAULT_ID_ATTRIBUTES = {type: :integer, limit: 1, null: false}.freeze
     DEFAULT_VALUE_ATTRIBUTES = {type: :string, limit: 255, null: false}.freeze
 
     class NewTable
@@ -30,7 +29,6 @@ module EnumTable
         @connection = connection
         @name = name
         @options = options
-        @id = DEFAULT_ID_ATTRIBUTES.dup
         @value = DEFAULT_VALUE_ATTRIBUTES.dup
         @adds = []
         values = options.delete(:values) and
@@ -38,8 +36,7 @@ module EnumTable
       end
 
       def _create
-        @connection.create_table @name, @options.merge(id: false) do |t|
-          t.column :id, @id.delete(:type), @id
+        @connection.create_table @name, @options do |t|
           t.column :value, @value.delete(:type), @value
         end
         unless @connection.table_exists?(:enum_tables)
@@ -50,10 +47,6 @@ module EnumTable
         @connection.execute "INSERT INTO enum_tables(table_name) VALUES('#{@name}')"
         table = Table.new(@connection, @name, 0)
         @adds.each { |args| table.add(*args) }
-      end
-
-      def id(options)
-        @id.update(options)
       end
 
       def value(options)

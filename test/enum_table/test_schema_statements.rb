@@ -28,15 +28,6 @@ describe EnumTable::SchemaStatements do
       connection.create_enum_table :genders, force: true
     end
 
-    it "allows configuring the id column in the block" do
-      connection.create_enum_table :genders do |t|
-        t.id type: :string, limit: 20
-      end
-      column = connection.columns(:genders).find { |c| c.name == 'id' }
-      column.type.must_equal :string
-      column.limit.must_equal 20
-    end
-
     it "allows configuring the type column in the block" do
       connection.create_enum_table :genders do |t|
         t.value type: :binary, limit: 20

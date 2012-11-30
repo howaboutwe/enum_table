@@ -12,7 +12,6 @@ module EnumTable
       table_names = @connection.enum_tables
       table_names.each do |table_name|
         stream.puts "  create_enum_table #{table_name.inspect}, force: true do |t|"
-        enum_table_column(stream, table_name, 'id', SchemaStatements::DEFAULT_ID_ATTRIBUTES)
         enum_table_column(stream, table_name, 'value', SchemaStatements::DEFAULT_VALUE_ATTRIBUTES)
         @connection.execute("SELECT id, value FROM #{table_name} ORDER BY id").each do |row|
           stream.puts "    t.add #{row[1].to_s.inspect}, #{row[0]}"

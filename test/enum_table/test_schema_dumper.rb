@@ -35,18 +35,6 @@ describe EnumTable::SchemaDumper do
         EOS
       end
 
-      it "dumps custom id column attributes" do
-        connection.create_enum_table :user_genders do |t|
-          t.id type: :string, limit: 20, null: true
-        end
-        ActiveRecord::SchemaDumper.dump(connection, stream)
-        stream.string.must_include(<<-EOS.gsub(/^ *\|/, ''))
-          |  create_enum_table "user_genders", force: true do |t|
-          |    t.id type: :string, limit: 20, null: true
-          |  end
-        EOS
-      end
-
       it "dumps custom value column attributes" do
         connection.create_enum_table :user_genders do |t|
           t.value type: :binary, limit: 20, null: true

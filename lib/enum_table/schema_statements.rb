@@ -44,7 +44,7 @@ module EnumTable
         end
         unless @connection.table_exists?(:enum_tables)
           @connection.create_table :enum_tables, id: false, force: true do |t|
-            t.string :table_name, null: false
+            t.string :table_name, null: false, limit: 255
           end
         end
         @connection.execute "INSERT INTO enum_tables(table_name) VALUES('#{@name}')"

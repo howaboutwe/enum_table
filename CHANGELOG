@@ -1,3 +1,10 @@
+== LATEST
+
+ * DB Nazi compliance.
+ * Remove customizability of the foreign key, since ActiveRecord mangles these
+   customizations when roundtripped through schema.rb.
+ * Foreign keys via foreigner now work.
+
 == 0.0.1 2012-11-05
 
  * Hi.

@@ -3,17 +3,17 @@ sqlite3:
 mysql:
   username: root
   password:
-  database: db_nazi_test
+  database: enum_table_test
 mysql2:
   username: root
   password:
-  database: db_nazi_test
+  database: enum_table_test
 postgresql:
   username: postgres
   password:
-  database: db_nazi_test
+  database: enum_table_test
   min_messages: warning
 jdbcmysql:
   username: root
   password:
-  database: db_nazi_test
+  database: enum_table_test

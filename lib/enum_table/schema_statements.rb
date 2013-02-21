@@ -4,6 +4,7 @@ module EnumTable
       table = NewTable.new(self, table_name, options)
       yield table if block_given?
       table._create
+      enum_tables_updated
     end
 
     def change_enum_table(table_name)
@@ -13,13 +14,17 @@ module EnumTable
     def drop_enum_table(table_name)
       drop_table table_name
       execute "DELETE FROM enum_tables WHERE table_name = '#{table_name}'"
+      enum_tables_updated
     end
 
     def enum_tables
       return [] if !table_exists?('enum_tables')
-      execute("SELECT table_name FROM enum_tables").map do |row|
-        row[0]
-      end.sort
+      @enum_tables ||= execute("SELECT table_name FROM enum_tables").
+        map { |row| row[0] }.sort
+    end
+
+    def enum_tables_updated
+      @enum_tables = nil
     end
 
     DEFAULT_VALUE_ATTRIBUTES = {type: :string, limit: 255, null: false}.freeze

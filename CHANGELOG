@@ -1,3 +1,7 @@
+== LATEST
+
+ * Memoize enum_table list. Your logs are now less noisy.
+
 == 0.1.0 2012-11-30
 
  * DB Nazi compliance.

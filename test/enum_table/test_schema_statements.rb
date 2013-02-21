@@ -110,6 +110,21 @@ describe EnumTable::SchemaStatements do
       connection.drop_enum_table :genders
       connection.enum_tables.must_equal []
     end
+
+    it "clears memoized tables when an enum table is created" do
+      connection.create_enum_table :genders
+      connection.enum_tables.must_equal ['genders']
+      connection.create_enum_table :statuses
+      connection.enum_tables.must_equal ['genders', 'statuses']
+    end
+
+    it "clears memoized tables when an enum table is dropped" do
+      connection.create_enum_table :genders
+      connection.create_enum_table :statuses
+      connection.enum_tables.must_equal ['genders', 'statuses']
+      connection.drop_enum_table :genders
+      connection.enum_tables.must_equal ['statuses']
+    end
   end
 
   def read_table(name)

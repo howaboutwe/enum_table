@@ -60,6 +60,7 @@ module EnumTable
         when String, Symbol, nil
           map = {}
           table_name = table || "#{self.table_name.singularize}_#{name.to_s.pluralize}"
+          return {} if EnumTable.missing_tables_allowed? && !connection.tables.include?(table_name)
           connection.execute("SELECT id, value FROM #{table_name}").each do |row|
             map[row[1]] = row[0]
           end

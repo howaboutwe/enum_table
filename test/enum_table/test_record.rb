@@ -65,6 +65,29 @@ describe EnumTable do
       enum.id_name.must_equal :gender_number
     end
 
+    describe "when missing tables are not allowed" do
+      it "raises an error if the underlying table does not exist" do
+        # must_raise does not do ancestor lookup in some versions of minitest
+        # (notably the version that ships with Ruby 1.9.3). Avoid it until we
+        # have a testrb that honors the Gemfile.
+        exception = nil
+        begin
+          User.enum(:status)
+        rescue => exception
+        end
+        exception.must_be_kind_of StandardError
+      end
+    end
+
+    describe "when missing tables are allowed" do
+      before { EnumTable.missing_tables_allowed }
+      after { EnumTable.reset }
+
+      it "does not raise an error if the underlying table does not exist" do
+        User.enum :status
+      end
+    end
+
     describe "on a subclass" do
       before do
         User.inheritance_column = :user_type

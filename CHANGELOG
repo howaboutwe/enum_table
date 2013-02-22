@@ -1,6 +1,8 @@
 == LATEST
 
  * Memoize enum_table list. Your logs are now less noisy.
+ * #enum no longer requires the table to exist when migrating or loading the
+   schema, so migrations have a chance to create the enum tables.
 
 == 0.1.0 2012-11-30
 

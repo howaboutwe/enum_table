@@ -1,4 +1,4 @@
-== LATEST
+== 0.2.0 2013-05-14
 
  * Memoize enum_table list. Your logs are now less noisy.
  * #enum no longer requires the table to exist when migrating or loading the

@@ -20,7 +20,7 @@ module EnumTable
         end
         self.enums = enums.merge(name => reflection, name.to_s => reflection)
 
-        class_eval <<-EOS
+        class_eval <<-EOS, __FILE__, __LINE__ + 1
           def #{name}
             read_enum(:#{name})
           end

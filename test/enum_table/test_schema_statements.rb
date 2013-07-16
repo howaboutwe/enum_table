@@ -30,11 +30,11 @@ describe EnumTable::SchemaStatements do
 
     it "allows configuring the type column in the block" do
       connection.create_enum_table :genders do |t|
-        t.value type: :binary, limit: 20
+        t.value type: :integer, limit: 2
       end
       column = connection.columns(:genders).find { |c| c.name == 'value' }
-      column.type.must_equal :binary
-      column.limit.must_equal 20
+      column.type.must_equal :integer
+      column.limit.must_equal 2
     end
 
     it "records the enum_table" do

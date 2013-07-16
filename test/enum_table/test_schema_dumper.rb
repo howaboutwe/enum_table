@@ -46,6 +46,20 @@ describe EnumTable::SchemaDumper do
           |  end
         EOS
       end
+
+      it "performs the necessary SQL-escaping when reading tables" do
+        connection.instance_eval do
+          create_enum_table "a'b" do |t|
+            t.add "c'd", 1
+          end
+        end
+        ActiveRecord::SchemaDumper.dump(connection, stream)
+        stream.string.must_include(<<-EOS.gsub(/^ *\|/, ''))
+          |  create_enum_table "a'b", force: true do |t|
+          |    t.add "c'd", 1
+          |  end
+        EOS
+      end
     end
 
     describe "when there are no enum tables" do

@@ -55,6 +55,13 @@ describe EnumTable::SchemaStatements do
       end
       read_table('genders').must_equal [[1, 'female'], [2, 'male']]
     end
+
+    it "performs the necessary SQL escaping in value names" do
+      connection.create_enum_table "a'b" do |t|
+        t.add "c'd", 1
+      end
+      read_table("a'b").must_equal [[1, "c'd"]]
+    end
   end
 
   describe "#change_enum_table" do
@@ -82,6 +89,18 @@ describe EnumTable::SchemaStatements do
         t.remove :male
       end
       read_table('genders').must_equal [[1, 'female']]
+    end
+
+    it "performs the necessary SQL escaping in value names" do
+      connection.create_enum_table "a'b" do |t|
+        t.add "c'd", 1
+      end
+
+      connection.change_enum_table "a'b" do |t|
+        t.remove "c'd"
+        t.add "e'f", 1
+      end
+      read_table("a'b").must_equal [[1, "e'f"]]
     end
   end
 
@@ -129,7 +148,7 @@ describe EnumTable::SchemaStatements do
 
   def read_table(name)
     rows = []
-    connection.execute("SELECT id, value FROM #{name} ORDER BY id").each do |row|
+    connection.execute("SELECT id, value FROM #{connection.quote_table_name name} ORDER BY id").each do |row|
       rows << [row[0], row[1]]
     end
     rows

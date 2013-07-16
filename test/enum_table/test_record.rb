@@ -31,6 +31,18 @@ describe EnumTable do
       reflection.name.must_equal :gender
     end
 
+    it "performs the necessary SQL-escaping when reading the table" do
+      connection.create_table("a'b") { |t| t.string :value }
+      connection.execute "INSERT INTO `a'b`(id, value) VALUES (1, 'c''d')"
+      Object.const_set :AB, Class.new(ActiveRecord::Base) { self.table_name = "a'b" }
+      begin
+        AB.enum :e, table: "a'b"
+        AB.enums[:e].value(1).must_equal(:"c'd")
+      ensure
+        Object.send :remove_const, :AB
+      end
+    end
+
     it "accepts the :table name as a string" do
       connection.create_table(:custom_table) { |t| t.string :value }
       connection.execute "INSERT INTO custom_table(id, value) VALUES (1, 'male'), (2, 'female')"

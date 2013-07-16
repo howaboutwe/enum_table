@@ -13,7 +13,7 @@ module EnumTable
 
     def drop_enum_table(table_name)
       drop_table table_name
-      execute "DELETE FROM enum_tables WHERE table_name = '#{table_name}'"
+      execute "DELETE FROM enum_tables WHERE table_name = #{quote table_name}"
       enum_tables_updated
     end
 
@@ -49,7 +49,7 @@ module EnumTable
             t.string :table_name, null: false, limit: 255
           end
         end
-        @connection.execute "INSERT INTO enum_tables(table_name) VALUES('#{@name}')"
+        @connection.execute "INSERT INTO enum_tables(table_name) VALUES(#{@connection.quote @name})"
         table = Table.new(@connection, @name, 0)
         @adds.each { |args| table.add(*args) }
       end
@@ -67,17 +67,17 @@ module EnumTable
       def initialize(connection, name, max_id=nil)
         @connection = connection
         @name = name
-        @max_id = @connection.execute("SELECT max(id) FROM #{@name}").to_a[0][0] || 0
+        @max_id = @connection.execute("SELECT max(id) FROM #{@connection.quote_table_name @name}").to_a[0][0] || 0
       end
 
       def add(value, id=nil)
         id ||= @max_id + 1
         @max_id = id if id > @max_id
-        @connection.execute "INSERT INTO #{@name}(id, value) VALUES(#{id}, '#{value}')"
+        @connection.execute "INSERT INTO #{@connection.quote_table_name @name}(id, value) VALUES(#{id}, #{@connection.quote value})"
       end
 
       def remove(value)
-        @connection.execute "DELETE FROM #{@name} WHERE value = '#{value}'"
+        @connection.execute "DELETE FROM #{@connection.quote_table_name @name} WHERE value = #{@connection.quote value}"
       end
     end
   end

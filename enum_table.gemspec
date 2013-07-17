@@ -7,6 +7,8 @@ Gem::Specification.new do |gem|
   gem.version       = EnumTable::VERSION
   gem.authors       = ['George Ogata']
   gem.email         = ['george.ogata@gmail.com']
+  gem.license       = 'MIT'
+  gem.date          = Time.now.strftime('%Y-%m-%d')
   gem.summary       = "Enumeration tables for ActiveRecord"
   gem.homepage      = 'http://github.com/howaboutwe/enum_table'
 

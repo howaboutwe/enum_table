@@ -67,7 +67,8 @@ describe EnumTable::SchemaStatements do
   describe "#change_enum_table" do
     before do
       connection.execute "CREATE TABLE genders(id integer, value varchar(20))"
-      connection.execute "INSERT INTO genders (id, value) VALUES (1, 'female'), (2, 'male')"
+      connection.execute "INSERT INTO genders (id, value) VALUES (1, 'female')"
+      connection.execute "INSERT INTO genders (id, value) VALUES (2, 'male')"
     end
 
     it "inserts values added in the block" do

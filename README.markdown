@@ -131,6 +131,11 @@ it less disruptive to use strings instead. Do that with the `:type` option:
    * Include tests where practical.
    * Leave the version alone, or bump it in a separate commit.
 
+### Running tests
+```
+testrb test
+```
+
 ## Copyright
 
 Copyright (c) HowAboutWe. See LICENSE for details.

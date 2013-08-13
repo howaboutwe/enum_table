@@ -17,7 +17,8 @@ describe EnumTable do
   describe '.enum' do
     before do
       connection.create_table(:user_genders) { |t| t.string :value }
-      connection.execute "INSERT INTO user_genders(id, value) VALUES (1, 'female'), (2, 'male')"
+      connection.execute "INSERT INTO user_genders(id, value) VALUES (1, 'female')"
+      connection.execute "INSERT INTO user_genders(id, value) VALUES (2, 'male')"
     end
 
     it "defines an enum by a conventionally named table by default" do
@@ -45,14 +46,16 @@ describe EnumTable do
 
     it "accepts the :table name as a string" do
       connection.create_table(:custom_table) { |t| t.string :value }
-      connection.execute "INSERT INTO custom_table(id, value) VALUES (1, 'male'), (2, 'female')"
+      connection.execute "INSERT INTO custom_table(id, value) VALUES (1, 'male')"
+      connection.execute "INSERT INTO custom_table(id, value) VALUES (2, 'female')"
       User.enum :gender, table: 'custom_table'
       User.enums[:gender].value(1).must_equal(:male)
     end
 
     it "accepts the :table name as a symbol" do
       connection.create_table(:custom_table) { |t| t.string :value }
-      connection.execute "INSERT INTO custom_table(id, value) VALUES (1, 'male'), (2, 'female')"
+      connection.execute "INSERT INTO custom_table(id, value) VALUES (1, 'male')"
+      connection.execute "INSERT INTO custom_table(id, value) VALUES (2, 'female')"
       User.enum :gender, table: :custom_table
       User.enums[:gender].value(1).must_equal(:male)
     end

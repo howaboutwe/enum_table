@@ -138,8 +138,8 @@ module EnumTable
       end
 
       # Enables state_machine to set initial values for states. Ick.
-      def initialize_attributes(attributes)  # :nodoc:
-        attributes = super
+      def initialize_attributes(attributes, options={})  # :nodoc:
+        attributes = super(attributes, options)
         enums.each do |name, reflection|
           if (value = attributes.delete(reflection.name.to_s))
             attributes[reflection.id_name.to_s] ||= reflection.id(value)

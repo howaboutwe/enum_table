@@ -198,6 +198,10 @@ describe EnumTable do
       attributes['gender_id'].must_equal 1
       attributes.key?('gender').must_equal false
     end
+
+    it "should take an options hash in addition to the attributes hash and not raise an error" do
+      User.initialize_attributes({ 'gender' => 'female' }, { :some => :stuff }).wont_be_nil
+    end
   end
 
   describe "#enum_id" do

@@ -10,6 +10,8 @@ module EnumTable
       @strings_to_ids = {}
       @values_to_ids = {}
       @ids_to_values = {}
+      @populate_procs = []
+      @populated = false
     end
 
     def initialize_copy(other)
@@ -20,10 +22,16 @@ module EnumTable
       @strings_to_ids = other.instance_variable_get(:@strings_to_ids).dup
       @values_to_ids = other.instance_variable_get(:@values_to_ids).dup
       @ids_to_values = other.instance_variable_get(:@ids_to_values).dup
+      @populate_procs = other.instance_variable_get(:@populate_procs).dup
+      @populated = false
     end
 
     attr_reader :name
     attr_accessor :id_name, :type
+
+    def to_populate(&block)
+      @populate_procs << block
+    end
 
     def add_value(id, value)
       @strings_to_ids[value.to_s] = id
@@ -34,6 +42,7 @@ module EnumTable
     end
 
     def id(value)
+      ensure_populated
       if value.is_a?(String) || type == :string
         @strings_to_ids[value.to_s.strip]
       else
@@ -42,11 +51,22 @@ module EnumTable
     end
 
     def value(id)
+      ensure_populated
       @ids_to_values[id]
     end
 
     def values
+      ensure_populated
       @values_to_ids.keys
+    end
+
+    private
+
+    def ensure_populated
+      return if @populated
+      @populate_procs.each { |p| p.call(self) }
+      @populate_procs.clear
+      @populated = true
     end
   end
 end

@@ -70,37 +70,24 @@ describe EnumTable do
       User.enums[:gender].value(1).must_equal :male
     end
 
-    it "raises an ArgumentError if :table is something else" do
-      ->{ User.enum :gender, table: Object.new }.must_raise ArgumentError, /invalid :table specifier/
-    end
-
     it "passes other options to the Reflection" do
       User.enum :gender, id_name: :gender_number
       enum = User.enums[:gender]
       enum.id_name.must_equal :gender_number
     end
 
-    describe "when missing tables are not allowed" do
-      it "raises an error if the underlying table does not exist" do
-        # must_raise does not do ancestor lookup in some versions of minitest
-        # (notably the version that ships with Ruby 1.9.3). Avoid it until we
-        # have a testrb that honors the Gemfile.
-        exception = nil
-        begin
-          User.enum(:status)
-        rescue => exception
-        end
-        exception.must_be_kind_of StandardError
-      end
+    it "does not cry immediately if the enum table does not exist" do
+      User.enum(:status)
     end
 
-    describe "when missing tables are allowed" do
-      before { EnumTable.missing_tables_allowed }
-      after { EnumTable.reset }
-
-      it "does not raise an error if the underlying table does not exist" do
-        User.enum :status
+    it "does cry when you first try to use the enum if the enum table does not exist" do
+      User.enum(:status)
+      exception = nil
+      begin
+        User.enum_id(:status, 'awesome')
+      rescue => exception
       end
+      exception.must_be_kind_of StandardError
     end
 
     describe "on a subclass" do

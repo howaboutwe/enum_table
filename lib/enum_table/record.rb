@@ -15,8 +15,10 @@ module EnumTable
           value = options[key] and
             reflection.send "#{key}=", value
         end
-        enum_map(name, options).each do |value, id|
-          reflection.add_value id, value
+        reflection.to_populate do |ref|
+          enum_map(name, options).each do |value, id|
+            ref.add_value id, value
+          end
         end
         self.enums = enums.merge(name => reflection, name.to_s => reflection)
 
@@ -57,16 +59,13 @@ module EnumTable
           map = {}
           table.each_with_index { |element, i| map[element] = i + 1 }
           map
-        when String, Symbol, nil
+        else
           map = {}
           table_name = table || "#{self.table_name.singularize}_#{name.to_s.pluralize}"
-          return {} if EnumTable.missing_tables_allowed? && !connection.tables.include?(table_name)
           connection.execute("SELECT id, value FROM #{connection.quote_table_name table_name}").each do |row|
             map[row[1]] = row[0]
           end
           map
-        else
-          raise ArgumentError, "invalid table specifier: #{table.inspect}"
         end
       end
 

@@ -1,4 +1,4 @@
-== LATEST
+== 0.3.0 2013-12-12
 
  * Fix initialize_attributes when options are passed. [Rebecca Miller-Webster]
  * Lazily load enum mappings to avoid bootstrapping errors (migrating, seeding, etc.).

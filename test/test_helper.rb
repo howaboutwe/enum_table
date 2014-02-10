@@ -1,7 +1,7 @@
 ROOT = File.expand_path('..', File.dirname(__FILE__))
 $:.unshift "#{ROOT}/lib"
 
-require 'minitest/spec'
+require 'minitest/autorun'
 require 'active_record'
 require 'enum_table'
 
@@ -47,7 +47,12 @@ MiniTest::Spec.class_eval do
   end
 
   def self.use_database
-    before { recreate_database }
-    after { drop_database }
+    mod = Module.new do
+      extend Minitest::Spec::DSL
+
+      before { recreate_database }
+      after { drop_database }
+    end
+    include mod
   end
 end

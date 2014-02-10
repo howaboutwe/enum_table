@@ -9,9 +9,9 @@ describe EnumTable do
       t.integer :status_id
       t.string :user_type
     end
+    Object.const_set :User, Class.new(ActiveRecord::Base)
   end
 
-  before { Object.const_set :User, Class.new(ActiveRecord::Base) }
   after { Object.send :remove_const, :User }
 
   describe '.enum' do

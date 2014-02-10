@@ -90,6 +90,17 @@ describe EnumTable do
       exception.must_be_kind_of StandardError
     end
 
+    describe "when missing tables are allowed" do
+      before { EnumTable.missing_tables_allowed }
+      after { EnumTable.reset }
+
+      it "does not cry when you first use the enum if the table does not exist" do
+        User.enum(:status)
+        User.enum_id(:status, 'awesome').must_equal nil
+      end
+    end
+
+
     describe "on a subclass" do
       before do
         User.inheritance_column = :user_type

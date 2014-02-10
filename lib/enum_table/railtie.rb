@@ -19,7 +19,7 @@ module EnumTable
         %w'db:schema:load db:migrate db:migrate:up'.each do |task|
           task = Rake::Task[task]
           task.prerequisites.insert 0, 'enum_table:allow_missing_tables'
-          task.enhance { EnumRefTable.missing_tables_disallowed }
+          task.enhance { EnumTable.missing_tables_disallowed }
         end
       end
     end

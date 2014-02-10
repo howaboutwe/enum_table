@@ -1,3 +1,7 @@
+== LATEST
+
+ * Allow missing tables when migrating. [Kenneth Lay]
+
 == 0.3.0 2013-12-12
 
  * Fix initialize_attributes when options are passed. [Rebecca Miller-Webster]

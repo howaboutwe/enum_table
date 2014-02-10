@@ -123,6 +123,24 @@ it less disruptive to use strings instead. Do that with the `:type` option:
 
     enum :genders, type: :string
 
+### I can't set up my Rails app!
+
+If you load any models during Rails' initialization phase (e.g. from
+`config/application.rb`, or an initializer), and these models depend on the
+existence of enum tables, you may wind up with a circular dependency: your app
+startup depends on an enum table existing, and creating the enum table requires
+loading the app (via `db:schema:load`). This might only manifest itself when you
+try to load your schema on an empty database.
+
+It is strongly recommended to avoid loading models during
+initialization. However if you cannot avoid this there is an escape hatch:
+
+    config.enum_tables.allow_missing_tables = true
+
+This will silently return an empty enum mapping while this flag is true. Of
+course, this may have knock on effects if your model expects certain values to
+be present. Consider yourself warned!
+
 ## Contributing
 
  * [Bug reports](https://github.com/howaboutwe/enum_table/issues)

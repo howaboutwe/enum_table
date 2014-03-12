@@ -4,6 +4,7 @@ $:.unshift "#{ROOT}/lib"
 require 'minitest/autorun'
 require 'active_record'
 require 'enum_table'
+require 'pry'
 
 ADAPTER = ENV['ENUM_TABLE_ADAPTER'] || 'sqlite3'
 CONFIG = YAML.load_file("#{ROOT}/test/database.yml")[ADAPTER].merge(adapter: ADAPTER)

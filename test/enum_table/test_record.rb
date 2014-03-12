@@ -513,14 +513,14 @@ describe EnumTable do
       User.enum :gender, table: {female: 1, male: 2}
       female = User.create(gender_id: 1)
       male   = User.create(gender_id: 2)
-      User.where(gender: :female).all.must_equal [female]
+      User.where(gender: :female).to_a.must_equal [female]
     end
 
     it "supports filtering by enums with string keys" do
       User.enum :gender, table: {female: 1, male: 2}
       female = User.create(gender_id: 1)
       male   = User.create(gender_id: 2)
-      User.where('gender' => :female).all.must_equal [female]
+      User.where('gender' => :female).to_a.must_equal [female]
     end
 
     it "supports filtering by multiple values" do
@@ -528,7 +528,7 @@ describe EnumTable do
       female = User.create(gender_id: 1)
       male   = User.create(gender_id: 2)
       other  = User.create(gender_id: 3)
-      User.where(gender: [:female, :male]).all.must_equal [female, male]
+      User.where(gender: [:female, :male]).to_a.must_equal [female, male]
     end
 
     it "still supports filtering by other attributes" do
@@ -536,7 +536,7 @@ describe EnumTable do
       female1 = User.create(gender_id: 1, status_id: 1)
       male1   = User.create(gender_id: 2, status_id: 1)
       male2   = User.create(gender_id: 2, status_id: 2)
-      User.where(gender: :male, status_id: 1).all.must_equal [male1]
+      User.where(gender: :male, status_id: 1).to_a.must_equal [male1]
     end
   end
 
@@ -547,7 +547,7 @@ describe EnumTable do
       male   = User.create(gender_id: 2)
 
       User.find_by_gender(:female).must_equal female
-      User.find_all_by_gender(:female).must_equal [female]
+      #User.find_all_by_gender(:female).must_equal [female]
     end
   end
 

@@ -8,6 +8,7 @@ describe EnumTable do
       t.integer :gender_id
       t.integer :status_id
       t.string :user_type
+      t.integer :lock_version
     end
     Object.const_set :User, Class.new(ActiveRecord::Base)
   end
@@ -186,9 +187,13 @@ describe EnumTable do
       attributes.must_equal('gender_id' => 1)
     end
 
-    it "does not prevent optimistic locking from working, which also uses this internal method" do
-      attributes = User.initialize_attributes('lock_version' => nil)
-      attributes.must_equal('lock_version' => 0)
+    it "does not prevent optimistic locking from working, which also uses this internal method in AR < 4" do
+      user = User.create(gender: :male)
+      user.lock_version.must_equal 0
+
+      user = User.find(user.id)
+      user.update_attributes(gender: :female)
+      user.lock_version.must_equal 1
     end
 
     it "should favor the ID if both the id and value are present in the attributes hash (so enums override columns)" do
@@ -513,14 +518,14 @@ describe EnumTable do
       User.enum :gender, table: {female: 1, male: 2}
       female = User.create(gender_id: 1)
       male   = User.create(gender_id: 2)
-      User.where(gender: :female).all.must_equal [female]
+      User.where(gender: :female).to_a.must_equal [female]
     end
 
     it "supports filtering by enums with string keys" do
       User.enum :gender, table: {female: 1, male: 2}
       female = User.create(gender_id: 1)
       male   = User.create(gender_id: 2)
-      User.where('gender' => :female).all.must_equal [female]
+      User.where('gender' => :female).to_a.must_equal [female]
     end
 
     it "supports filtering by multiple values" do
@@ -528,7 +533,7 @@ describe EnumTable do
       female = User.create(gender_id: 1)
       male   = User.create(gender_id: 2)
       other  = User.create(gender_id: 3)
-      User.where(gender: [:female, :male]).all.must_equal [female, male]
+      User.where(gender: [:female, :male]).to_a.must_equal [female, male]
     end
 
     it "still supports filtering by other attributes" do
@@ -536,18 +541,41 @@ describe EnumTable do
       female1 = User.create(gender_id: 1, status_id: 1)
       male1   = User.create(gender_id: 2, status_id: 1)
       male2   = User.create(gender_id: 2, status_id: 2)
-      User.where(gender: :male, status_id: 1).all.must_equal [male1]
+      User.where(gender: :male, status_id: 1).to_a.must_equal [male1]
     end
   end
 
-  describe "dynamic finders" do
-    it "support retrieval by enums" do
-      User.enum :gender, table: {female: 1, male: 2}
-      female = User.create(gender_id: 1)
-      male   = User.create(gender_id: 2)
+  if ActiveRecord::VERSION::MAJOR < 4
+    describe "dynamic finders" do
+      it "support retrieval by enums" do
+        User.enum :gender, table: {female: 1, male: 2}
+        female = User.create(gender_id: 1)
+        male   = User.create(gender_id: 2)
 
-      User.find_by_gender(:female).must_equal female
-      User.find_all_by_gender(:female).must_equal [female]
+        User.find_by_gender(:female).must_equal female
+        User.find_all_by_gender(:female).must_equal [female]
+      end
+    end
+  else
+    describe ".find_or_initialize_by" do
+      it "supports building with enums" do
+        User.enum :gender, table: {female: 1, male: 2}
+
+        user = User.find_or_initialize_by(gender: :female)
+        user.gender_id.must_equal 1
+        user.gender.must_equal :female
+        user.save!
+      end
+
+      it "supports finding by enums" do
+        female = User.create(gender_id: 1)
+        male   = User.create(gender_id: 2)
+
+        User.enum :gender, table: {female: 1, male: 2}
+
+        user = User.find_or_initialize_by(gender: :female)
+        user.must_equal female
+      end
     end
   end
 

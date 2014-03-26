@@ -106,7 +106,7 @@ module EnumTable
         (reflection = inheritance_enum) ? super(reflection.value(type_name).to_s) : super
       end
 
-      # Enables .find_by_name(value) for enums.
+      # Enables .where(name: value) for enums.
       def expand_hash_conditions_for_aggregates(attrs)  # :nodoc:
         conditions = super
         enums.each do |name, reflection|
@@ -127,14 +127,16 @@ module EnumTable
         conditions
       end
 
-      # Enables .where(name: value) for enums.
-      def expand_attribute_names_for_aggregates(attribute_names)  # :nodoc:
-        attribute_names = super
-        enums.each do |name, reflection|
-          index = attribute_names.index(name) and
-            attribute_names[index] = reflection.id_name
+      if ActiveRecord::VERSION::MAJOR < 4
+        # Enables .find_by_name(value) for enums.
+        def expand_attribute_names_for_aggregates(attribute_names)  # :nodoc:
+          attribute_names = super
+          enums.each do |name, reflection|
+            index = attribute_names.index(name) and
+              attribute_names[index] = reflection.id_name
+          end
+          attribute_names
         end
-        attribute_names
       end
 
       # Enables state_machine to set initial values for states. Ick.

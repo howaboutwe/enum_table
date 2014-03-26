@@ -1,4 +1,4 @@
-## Enum Table [![Build Status](https://travis-ci.org/howaboutwe/enum_table.png)](https://travis-ci.org/howaboutwe/enum_table)
+## Enum Table [![Build Status](https://travis-ci.org/howaboutwe/enum_table.svg)](https://travis-ci.org/howaboutwe/enum_table)
 
 Table-based enumerations for ActiveRecord.
 

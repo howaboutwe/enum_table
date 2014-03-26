@@ -4,8 +4,6 @@ script: bundle exec testrb test
 rvm:
   - 2.0.0
   - 2.1.0
-  - jruby-19mode
-  - rbx-2
 gemfile:
   - Gemfile
   - Gemfile.ar3

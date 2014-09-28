@@ -66,7 +66,7 @@ module EnumTable
       def initialize(connection, name, max_id=nil)
         @connection = connection
         @name = name
-        @max_id = @connection.execute("SELECT max(id) FROM #{@connection.quote_table_name @name}").to_a[0][0] || 0
+        @max_id = @connection.select_rows("SELECT max(id) FROM #{@connection.quote_table_name @name}").to_a[0][0] || 0
       end
 
       def add(value, id=nil)

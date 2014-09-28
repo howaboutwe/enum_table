@@ -13,7 +13,7 @@ module EnumTable
       table_names.each do |table_name|
         stream.puts "  create_enum_table #{table_name.inspect}, force: true do |t|"
         enum_table_column(stream, table_name, 'value', SchemaStatements::DEFAULT_VALUE_ATTRIBUTES)
-        @connection.execute("SELECT id, value FROM #{@connection.quote_table_name table_name} ORDER BY id").each do |row|
+        @connection.select_rows("SELECT id, value FROM #{@connection.quote_table_name table_name} ORDER BY id").each do |row|
           stream.puts "    t.add #{row[1].to_s.inspect}, #{row[0]}"
         end
         stream.puts "  end"

@@ -19,8 +19,7 @@ module EnumTable
 
     def enum_tables
       return [] if !table_exists?('enum_tables')
-      @enum_tables ||= execute("SELECT table_name FROM enum_tables").
-        map { |row| row[0] }.sort
+      @enum_tables ||= select_values("SELECT table_name FROM enum_tables").sort
     end
 
     def enum_tables_updated

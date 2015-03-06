@@ -1,6 +1,7 @@
 == LATEST
 
  * Add Thing.enum_value, as the inverse of Thing.enum_id.
+ * Fix ActiveRecord version dependency. 4.2 is not supported.
 
 == 0.5.0 2014-03-26
 

@@ -15,6 +15,6 @@ Gem::Specification.new do |gem|
   gem.files         = `git ls-files`.split("\n")
   gem.test_files    = `git ls-files -- {test,spec,features}/*`.split("\n")
 
-  gem.add_runtime_dependency 'activerecord', '>= 3', '< 5'
+  gem.add_runtime_dependency 'activerecord', '>= 3', '< 4.2'
   gem.add_development_dependency 'ritual', '~> 0.4.1'
 end

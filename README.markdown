@@ -2,6 +2,16 @@
 
 Table-based enumerations for ActiveRecord.
 
+## Deprecation Notice
+
+ActiveRecord 4.1 introduced its own way of handling enumerations, which is
+somewhat at odds with the approach of this gem. To get the additional benefits
+of Enum Table, it's suggested that you migrate to standard ActiveRecord enums,
+and then sync the enum values in your code to your database as necessary.
+
+Enum Table is compatible with ActiveRecord versions up to 4.1.x, but 4.2.x
+support is not currently planned.
+
 ## What?
 
 When you have a column that should only take one of a finite set of string

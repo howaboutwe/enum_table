@@ -170,12 +170,32 @@ describe EnumTable do
   describe ".enum_id" do
     before { User.enum :gender, table: {female: 1} }
 
-    it "raises an ArgumentError if the enum name is invalid" do
-      ->{ User.enum_id(:bad) }.must_raise ArgumentError
-    end
-
     it "returns the id for the given enum value" do
       User.enum_id(:gender, :female).must_equal 1
+    end
+
+    it "returns nil if the value is invalid" do
+      User.enum_id(:gender, :bad).must_be_nil
+    end
+
+    it "raises an ArgumentError if the enum name is invalid" do
+      ->{ User.enum_id(:bender, :female) }.must_raise ArgumentError
+    end
+  end
+
+  describe ".enum_value" do
+    before { User.enum :gender, table: {female: 1} }
+
+    it "returns the value for the given enum id" do
+      User.enum_value(:gender, 1).must_equal :female
+    end
+
+    it "raises nil if the enum id is invalid" do
+      User.enum_value(:gender, 3).must_be_nil
+    end
+
+    it "raises an ArgumentError if the enum name is invalid" do
+      ->{ User.enum_value(:bender, 1) }.must_raise ArgumentError
     end
   end
 

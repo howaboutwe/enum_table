@@ -80,6 +80,12 @@ module EnumTable
         reflection.id(value)
       end
 
+      def enum_value(name, id)
+        reflection = enums[name] or
+          raise ArgumentError, "no such enum: #{name}"
+        reflection.value(id)
+      end
+
       # Enables enums for STI types.
       def builtin_inheritance_column  # :nodoc:
         # Can this be made less brittle?

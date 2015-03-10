@@ -19,8 +19,7 @@ module EnumTable
 
     def enum_tables
       return [] if !table_exists?('enum_tables')
-      @enum_tables ||= execute("SELECT table_name FROM enum_tables").
-        map { |row| row[0] }.sort
+      @enum_tables ||= select_values("SELECT table_name FROM enum_tables").sort
     end
 
     def enum_tables_updated
@@ -67,7 +66,7 @@ module EnumTable
       def initialize(connection, name, max_id=nil)
         @connection = connection
         @name = name
-        @max_id = @connection.execute("SELECT max(id) FROM #{@connection.quote_table_name @name}").to_a[0][0] || 0
+        @max_id = @connection.select_rows("SELECT max(id) FROM #{@connection.quote_table_name @name}").to_a[0][0] || 0
       end
 
       def add(value, id=nil)

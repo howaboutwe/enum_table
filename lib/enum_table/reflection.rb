@@ -34,6 +34,7 @@ module EnumTable
     end
 
     def add_value(id, value)
+      id = id.to_i
       @strings_to_ids[value.to_s] = id
 
       cast_value = @type == :string ? value.to_s : value.to_sym
